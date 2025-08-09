@@ -52,3 +52,34 @@ exports.getAllOrdersFromOrderService = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch orders', error: error.message });
   }
 };
+
+exports.getUserByIdFromUserService = async (req, res) => {
+  try {
+        const response = await axios.get('http://localhost:5001/user/:id'); 
+    const { id } = req.params; 
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error', error: error.message });
+  }
+};
+
+exports.deleteUserByIdFromUserService = async (req,res) =>{
+  try{
+      const response = await axios.delete('http://localhost:5001/user/delete/:id'); 
+    const deletedUser = await User.findByIdAndDelete(id)
+    if(!deletedUser){
+      return res.status(400).json({message:"User Not Found"})
+    }
+    return res.status(201).json({message:"User deleted Sucessfully",deletedUser})
+  }
+  catch(error){
+    return res.status(500).json({message:"Internal Server Error",error})
+  }
+}
